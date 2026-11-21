@@ -12,7 +12,8 @@ import java.util.List;
 @Repository
 public interface UsoInsumoRepository extends JpaRepository<UsoInsumo, Long> {
 
-    @Query("select coalesce(sum(u.cantidadUsada), 0) from UsoInsumo u where u.loteInsumo.id = :loteId")
+    /** Devuelve null si el lote aún no tiene usos. */
+    @Query("select sum(u.cantidadUsada) from UsoInsumo u where u.loteInsumo.id = :loteId")
     BigDecimal sumarCantidadUsadaPorLote(@Param("loteId") Long loteId);
 
     List<UsoInsumo> findByCitaAtencion_IdOrderByUsadoEnAsc(Long citaAtencionId);

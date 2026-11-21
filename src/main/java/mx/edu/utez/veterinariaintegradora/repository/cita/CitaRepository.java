@@ -21,7 +21,7 @@ public interface CitaRepository extends JpaRepository<Cita, Long> {
     List<Cita> findByEstadoOrderByFechaHoraInicioAsc(EstadoCita estado);
 
     /** Hay traslape si otra cita activa del veterinario empieza antes del fin y termina después del inicio. */
-    @Query("select count(c) > 0 from Cita c where c.veterinario.id = :veterinarioId "
+    @Query("select case when count(c) > 0 then true else false end from Cita c where c.veterinario.id = :veterinarioId "
             + "and c.id <> :citaExcluida and c.estado not in :estadosLibres "
             + "and c.fechaHoraInicio < :fin and c.fechaHoraFin > :inicio")
     boolean existeTraslapeVeterinario(@Param("veterinarioId") Long veterinarioId,
@@ -30,7 +30,7 @@ public interface CitaRepository extends JpaRepository<Cita, Long> {
                                       @Param("citaExcluida") Long citaExcluida,
                                       @Param("estadosLibres") Collection<EstadoCita> estadosLibres);
 
-    @Query("select count(c) > 0 from Cita c where c.mascota.id = :mascotaId "
+    @Query("select case when count(c) > 0 then true else false end from Cita c where c.mascota.id = :mascotaId "
             + "and c.id <> :citaExcluida and c.estado not in :estadosLibres "
             + "and c.fechaHoraInicio < :fin and c.fechaHoraFin > :inicio")
     boolean existeTraslapeMascota(@Param("mascotaId") Long mascotaId,
