@@ -4,6 +4,12 @@ import mx.edu.utez.veterinariaintegradora.model.cita.CitaAtencion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface CitaAtencionRepository extends JpaRepository<CitaAtencion, Long> {
+
+    List<CitaAtencion> findByCita_IdOrderByAplicadaEnAsc(Long citaId);
+
+    boolean existsByCita_Id(Long citaId);
 }
