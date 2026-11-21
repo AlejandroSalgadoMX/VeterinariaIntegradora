@@ -7,10 +7,15 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Repository
 public interface UsoInsumoRepository extends JpaRepository<UsoInsumo, Long> {
 
     @Query("select coalesce(sum(u.cantidadUsada), 0) from UsoInsumo u where u.loteInsumo.id = :loteId")
     BigDecimal sumarCantidadUsadaPorLote(@Param("loteId") Long loteId);
+
+    List<UsoInsumo> findByCitaAtencion_IdOrderByUsadoEnAsc(Long citaAtencionId);
+
+    List<UsoInsumo> findByCitaAtencion_Cita_IdOrderByUsadoEnAsc(Long citaId);
 }
