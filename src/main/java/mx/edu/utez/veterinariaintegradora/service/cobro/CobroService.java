@@ -1,9 +1,12 @@
 package mx.edu.utez.veterinariaintegradora.service.cobro;
 
 import mx.edu.utez.veterinariaintegradora.dto.cobro.CargoResponse;
+import mx.edu.utez.veterinariaintegradora.dto.cobro.CitaPorCobrarResponse;
 import mx.edu.utez.veterinariaintegradora.dto.cobro.ConceptoCargoResponse;
+import mx.edu.utez.veterinariaintegradora.dto.cobro.PagoRequest;
 import mx.edu.utez.veterinariaintegradora.dto.cobro.PagoResponse;
 import mx.edu.utez.veterinariaintegradora.dto.dueno.DuenoResponse;
+import mx.edu.utez.veterinariaintegradora.dto.veterinario.VeterinarioResponse;
 import mx.edu.utez.veterinariaintegradora.exception.RecursoNoEncontradoException;
 import mx.edu.utez.veterinariaintegradora.exception.ReglaNegocioException;
 import mx.edu.utez.veterinariaintegradora.model.cita.Cita;
@@ -83,6 +86,56 @@ public class CobroService {
         Cargo cargo = cargoRepository.findByCita_Id(citaId)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Cargo de la cita", citaId));
         Pago pago = pagoRepository.findByCargo_Id(cargo.getId()).orElse(null);
+        return construirRespuesta(cita, cargo, pago);
+    }
+
+    /** HU-REC-04: lista de citas atendidas pendientes de pago. */
+    @Transactional(readOnly = true)
+    public List<CitaPorCobrarResponse> listarPendientes() {
+        return citaRepository.findByEstadoOrderByFechaHoraInicioAsc(EstadoCita.POR_COBRAR).stream()
+                .map(cita -> new CitaPorCobrarResponse(
+                        cita.getId(),
+                        cargoRepository.findByCita_Id(cita.getId()).map(Cargo::getId).orElse(null),
+                        cita.getMascota().getNombre(),
+                        DuenoResponse.nombreCompleto(cita.getMascota().getDueno()),
+                        cita.getMascota().getDueno().getTelefono(),
+                        VeterinarioResponse.nombreCompleto(cita.getVeterinario()),
+                        cita.getFechaHoraInicio(),
+                        calcularTotal(cita.getId())))
+                .toList();
+    }
+
+    /**
+     * HU-REC-04: un solo pago por el importe completo del cargo (sin pagos parciales).
+     * Al registrarlo, la cita pasa a CERRADA.
+     */
+    @Transactional
+    public CargoResponse registrarPago(Long citaId, PagoRequest request) {
+        Cita cita = citaService.buscar(citaId);
+        if (cita.getEstado() == EstadoCita.CERRADA) {
+            throw new ReglaNegocioException("La cita ya está CERRADA; su cargo ya fue pagado.");
+        }
+        if (cita.getEstado() != EstadoCita.POR_COBRAR) {
+            throw new ReglaNegocioException("Solo se cobran citas POR_COBRAR (estado actual: " + cita.getEstado() + ").");
+        }
+        Cargo cargo = cargoRepository.findByCita_Id(citaId)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Cargo de la cita", citaId));
+        if (pagoRepository.existsByCargo_Id(cargo.getId())) {
+            throw new ReglaNegocioException("El cargo de esta cita ya tiene un pago registrado.");
+        }
+        BigDecimal total = calcularTotal(citaId);
+        if (request.getMontoPagado().compareTo(total) != 0) {
+            throw new ReglaNegocioException("No se permiten pagos parciales ni montos distintos: el total del cargo es $"
+                    + total + " y se recibió $" + request.getMontoPagado() + ".");
+        }
+        Pago pago = new Pago();
+        pago.setCargo(cargo);
+        pago.setFormaPago(request.getFormaPago());
+        pago.setMontoPagado(total);
+        pago = pagoRepository.save(pago);
+
+        cita.setEstado(EstadoCita.CERRADA);
+        citaRepository.save(cita);
         return construirRespuesta(cita, cargo, pago);
     }
 
