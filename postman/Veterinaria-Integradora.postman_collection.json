@@ -1,0 +1,1410 @@
+{
+  "info": {
+    "name": "Veterinaria Integradora - API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Servicios REST del Sistema de Veterinaria (DFR v3.0). Ejecuta primero Auth > Login: guarda el token automáticamente."
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"correo\": \"admin@veterinaria.mx\",\n  \"contrasena\": \"Admin1234\"\n}"
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const r = pm.response.json();",
+                  "if (r.token) { pm.collectionVariables.set('token', r.token); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Mi perfil",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "me"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/logout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "logout"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "HU-ADM-01 Usuarios",
+      "item": [
+        {
+          "name": "Listar usuarios",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/usuarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "usuarios"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear usuario recepción",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/usuarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "usuarios"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rol\": \"RECEPCION\",\n  \"correo\": \"recepcion@veterinaria.mx\",\n  \"contrasena\": \"Recepcion123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Crear usuario veterinario",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/usuarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "usuarios"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rol\": \"VETERINARIO\",\n  \"correo\": \"vet.lopez@veterinaria.mx\",\n  \"contrasena\": \"Veterinario123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Actualizar usuario",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/usuarios/2",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "usuarios",
+                "2"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rol\": \"RECEPCION\",\n  \"correo\": \"recepcion@veterinaria.mx\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Activar / desactivar usuario",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/usuarios/2/estado",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "usuarios",
+                "2",
+                "estado"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"activo\": true\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "HU-ADM-02 Veterinarios",
+      "item": [
+        {
+          "name": "Listar veterinarios activos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/veterinarios?activo=true",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "veterinarios"
+              ],
+              "query": [
+                {
+                  "key": "activo",
+                  "value": "true"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Registrar veterinario",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/veterinarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "veterinarios"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuarioId\": 3,\n  \"nombres\": \"Laura\",\n  \"apellidoPaterno\": \"López\",\n  \"apellidoMaterno\": \"Ruiz\",\n  \"cedulaProfesional\": \"MVZ-123456\",\n  \"especialidad\": \"Pequeñas especies\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Actualizar veterinario",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/veterinarios/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "veterinarios",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuarioId\": 3,\n  \"nombres\": \"Laura\",\n  \"apellidoPaterno\": \"López\",\n  \"apellidoMaterno\": \"Ruiz\",\n  \"cedulaProfesional\": \"MVZ-123456\",\n  \"especialidad\": \"Medicina interna\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Activar / desactivar veterinario",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/veterinarios/1/estado",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "veterinarios",
+                "1",
+                "estado"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"activo\": true\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Especies",
+      "item": [
+        {
+          "name": "Listar especies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/especies",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "especies"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear especie Perro",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/especies",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "especies"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Perro\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Crear especie Gato",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/especies",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "especies"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Gato\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "HU-ADM-04 Insumos y lotes",
+      "item": [
+        {
+          "name": "Listar insumos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/insumos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "insumos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear insumo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/insumos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "insumos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Vacuna antirrábica\",\n  \"descripcion\": \"Dosis individual\",\n  \"precioVentaBase\": 0\n}"
+            }
+          }
+        },
+        {
+          "name": "Crear insumo cobrable",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/insumos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "insumos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Desparasitante tableta\",\n  \"precioVentaBase\": 45.5\n}"
+            }
+          }
+        },
+        {
+          "name": "Registrar lote",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/insumos/1/lotes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "insumos",
+                "1",
+                "lotes"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigoLote\": \"AR-2026-01\",\n  \"unidadMedida\": \"DOSIS\",\n  \"cantidadIngresada\": 20,\n  \"fechaIngreso\": \"2026-11-01\",\n  \"fechaCaducidad\": \"2027-11-01\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Lotes de un insumo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/insumos/1/lotes?soloVigentes=true",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "insumos",
+                "1",
+                "lotes"
+              ],
+              "query": [
+                {
+                  "key": "soloVigentes",
+                  "value": "true"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Lotes por caducar",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/insumos/lotes/por-caducar?dias=30",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "insumos",
+                "lotes",
+                "por-caducar"
+              ],
+              "query": [
+                {
+                  "key": "dias",
+                  "value": "30"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Activar / desactivar insumo",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/insumos/1/estado",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "insumos",
+                "1",
+                "estado"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"activo\": true\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "HU-ADM-03 Catálogo de atenciones",
+      "item": [
+        {
+          "name": "Listar atenciones",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/atenciones?activa=true",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "atenciones"
+              ],
+              "query": [
+                {
+                  "key": "activa",
+                  "value": "true"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear consulta general",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/atenciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "atenciones"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo\": \"CONSULTA\",\n  \"nombre\": \"Consulta general\",\n  \"precioBase\": 350,\n  \"duracionMinutos\": 30,\n  \"especieIds\": [\n    1,\n    2\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "Crear vacuna antirrábica",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/atenciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "atenciones"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo\": \"VACUNA\",\n  \"nombre\": \"Vacuna antirrábica\",\n  \"precioBase\": 280,\n  \"duracionMinutos\": 15,\n  \"edadMinimaDias\": 90,\n  \"intervaloMinimoDias\": 365,\n  \"especieIds\": [\n    1,\n    2\n  ],\n  \"insumosRequeridos\": [\n    {\n      \"insumoId\": 1,\n      \"cantidadRequerida\": 1\n    }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "Actualizar atención",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/atenciones/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "atenciones",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo\": \"CONSULTA\",\n  \"nombre\": \"Consulta general\",\n  \"precioBase\": 380,\n  \"duracionMinutos\": 30,\n  \"especieIds\": [\n    1,\n    2\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "Activar / desactivar atención",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/atenciones/1/estado",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "atenciones",
+                "1",
+                "estado"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"activo\": true\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "HU-REC-01 Dueños",
+      "item": [
+        {
+          "name": "Buscar dueños",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/duenos?q=garcia",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "duenos"
+              ],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "garcia"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Registrar dueño",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/duenos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "duenos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombres\": \"María\",\n  \"apellidoPaterno\": \"García\",\n  \"apellidoMaterno\": \"Pérez\",\n  \"telefono\": \"777 123 4567\",\n  \"correo\": \"maria.garcia@correo.com\",\n  \"direccionCorta\": \"Col. Centro, Cuernavaca\",\n  \"notas\": \"Prefiere contacto por WhatsApp\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Actualizar dueño",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/duenos/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "duenos",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombres\": \"María\",\n  \"apellidoPaterno\": \"García\",\n  \"telefono\": \"777 123 4567\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Mascotas del dueño",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/duenos/1/mascotas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "duenos",
+                "1",
+                "mascotas"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "HU-REC-02 Mascotas",
+      "item": [
+        {
+          "name": "Listar mascotas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/mascotas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "mascotas"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Registrar mascota",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/mascotas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "mascotas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"duenoId\": 1,\n  \"especieId\": 1,\n  \"nombre\": \"Firulais\",\n  \"raza\": \"Mestizo\",\n  \"sexo\": \"MACHO\",\n  \"fechaNacimiento\": \"2025-03-10\",\n  \"senasParticulares\": \"Mancha blanca en el pecho\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Registrar mascota con edad aproximada",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/mascotas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "mascotas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"duenoId\": 1,\n  \"especieId\": 2,\n  \"nombre\": \"Michi\",\n  \"sexo\": \"HEMBRA\",\n  \"edadAproximadaMeses\": 8\n}"
+            }
+          }
+        },
+        {
+          "name": "Cambiar estado de mascota",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/mascotas/1/estado",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "mascotas",
+                "1",
+                "estado"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"ACTIVA\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "HU-REC-03 Agenda de citas",
+      "item": [
+        {
+          "name": "Agenda del día",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/citas?fecha=2026-11-25",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "citas"
+              ],
+              "query": [
+                {
+                  "key": "fecha",
+                  "value": "2026-11-25"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Agendar cita",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/citas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "citas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"mascotaId\": 1,\n  \"veterinarioId\": 1,\n  \"fechaHoraInicio\": \"2026-11-25T10:00:00\",\n  \"fechaHoraFin\": \"2026-11-25T10:30:00\",\n  \"motivo\": \"Vacunación anual\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Reprogramar cita",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/citas/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "citas",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"mascotaId\": 1,\n  \"veterinarioId\": 1,\n  \"fechaHoraInicio\": \"2026-11-25T11:00:00\",\n  \"fechaHoraFin\": \"2026-11-25T11:30:00\",\n  \"motivo\": \"Vacunación anual\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Iniciar atención",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/citas/1/estado",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "citas",
+                "1",
+                "estado"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"EN_ATENCION\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Cancelar cita",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/citas/1/estado",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "citas",
+                "1",
+                "estado"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"CANCELADA\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Marcar no asistió",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/citas/1/estado",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "citas",
+                "1",
+                "estado"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"NO_ASISTIO\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "HU-VET Atención clínica",
+      "item": [
+        {
+          "name": "Registrar nota clínica (HU-VET-01)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/citas/1/historial",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "citas",
+                "1",
+                "historial"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pesoKg\": 12.5,\n  \"diagnostico\": \"Paciente sano\",\n  \"indicaciones\": \"Siguiente refuerzo en un año\",\n  \"observaciones\": \"Sin reacciones\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Ver nota clínica",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/citas/1/historial",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "citas",
+                "1",
+                "historial"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Aplicar atención (HU-VET-02)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/citas/1/atenciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "citas",
+                "1",
+                "atenciones"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"atencionId\": 2,\n  \"observaciones\": \"Aplicada en miembro posterior\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Aplicar atención eligiendo lote",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/citas/1/atenciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "citas",
+                "1",
+                "atenciones"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"atencionId\": 2,\n  \"lotes\": [\n    {\n      \"insumoId\": 1,\n      \"loteInsumoId\": 1\n    }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "Atenciones de la cita",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/citas/1/atenciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "citas",
+                "1",
+                "atenciones"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Usar insumo adicional (HU-VET-03)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/citas/1/atenciones/1/insumos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "citas",
+                "1",
+                "atenciones",
+                "1",
+                "insumos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"loteInsumoId\": 2,\n  \"cantidadUsada\": 1,\n  \"cobrable\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "Insumos usados en la cita",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/citas/1/insumos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "citas",
+                "1",
+                "insumos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar atención registrada por error",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/citas/1/atenciones/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "citas",
+                "1",
+                "atenciones",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Finalizar visita (genera cargo)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/citas/1/finalizar",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "citas",
+                "1",
+                "finalizar"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Expediente de la mascota (HU-VET-04)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/mascotas/1/expediente",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "mascotas",
+                "1",
+                "expediente"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "HU-REC-04 Cobros",
+      "item": [
+        {
+          "name": "Citas por cobrar",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/cobros/pendientes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cobros",
+                "pendientes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detalle del cargo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/citas/1/cargo",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "citas",
+                "1",
+                "cargo"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Registrar pago (cierra la cita)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/citas/1/pago",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "citas",
+                "1",
+                "pago"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"formaPago\": \"EFECTIVO\",\n  \"montoPagado\": 325.5\n}"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
