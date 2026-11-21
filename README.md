@@ -10,16 +10,16 @@ API del sistema de veterinaria para la integradora de Aplicaciones Web. Está he
 
 ## Configuración
 
-1. Crear la base de datos con el script `00_recrear_veterinaria_corregida.sql`.
-2. Crear el archivo `application-local.properties` en la raíz del proyecto con los datos de su MySQL (este archivo no se sube a GitHub):
+1. Crear el archivo `application-local.properties` en la raíz del proyecto con los datos de su MySQL (este archivo no se sube a GitHub):
 
 ```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/veterinaria_integradora?useSSL=false&serverTimezone=America/Mexico_City
 spring.datasource.username=root
 spring.datasource.password=su_password
 ```
 
-3. Correr `VeterinariaIntegradoraApplication`.
+2. Correr `VeterinariaIntegradoraApplication`.
+
+No hace falta crear la base de datos antes: al arrancar se crea `veterinaria_integradora` con sus tablas. Si prefieren crearla a mano, el script está en `database/veterinaria_integradora.sql` (ojo: borra la base si ya existe).
 
 La primera vez que se corre, si no hay usuarios en la base, se crea un administrador:
 
