@@ -153,6 +153,11 @@ public class AtencionClinicaService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public Integer intervaloDe(Long atencionId) {
+        return atencionRepository.findById(atencionId).map(Atencion::getIntervaloMinimoDias).orElse(null);
+    }
+
     public CitaAtencionResponse toResponse(CitaAtencion ca) {
         List<UsoInsumoResponse> usos = usoInsumoRepository.findByCitaAtencion_IdOrderByUsadoEnAsc(ca.getId()).stream()
                 .map(UsoInsumoResponse::from)
