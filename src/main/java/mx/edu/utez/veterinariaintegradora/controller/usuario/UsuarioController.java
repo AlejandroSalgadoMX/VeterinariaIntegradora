@@ -6,6 +6,7 @@ import mx.edu.utez.veterinariaintegradora.dto.usuario.UsuarioActualizarRequest;
 import mx.edu.utez.veterinariaintegradora.dto.usuario.UsuarioCrearRequest;
 import mx.edu.utez.veterinariaintegradora.dto.usuario.UsuarioResponse;
 import mx.edu.utez.veterinariaintegradora.model.usuario.RolUsuario;
+import mx.edu.utez.veterinariaintegradora.security.RolesPermitidos;
 import mx.edu.utez.veterinariaintegradora.service.usuario.UsuarioService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import java.util.List;
 @RestController
 @CrossOrigin({"*"})
 @RequestMapping("/api/usuarios")
+@RolesPermitidos(RolUsuario.ADMINISTRADOR)
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
